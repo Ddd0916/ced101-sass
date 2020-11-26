@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/botui@0.3.9/build/botui.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/botui/0.3.9/botui-theme-default.css"
+    />
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/botui/0.3.9/botui.min.js"></script>
+  </head>
+  <body>
+    <div id="app-5">
+      <p>{{ message }}</p>
+      <button v-on:click="reverseMessage">Reverse Message</button>
+      <span v-bind:title="message">
+        Hover your mouse over me for a few seconds to see my dynamically bound
+        title!
+      </span>
+    </div>
+    <div class="botui-app-container" id="botui-app">
+      <bot-ui></bot-ui>
+    </div>
+    <script>
+      var botui = new BotUI("botui-app"); // id of container
+
+      botui.message
+        .add({
+          delay: 500,
+          loading: true,
+          content: "Hi! Welcome to my website",
+        })
+        .then(function () {
+          return botui.message.add({
+            delay: 500,
+            loading: true,
+            content: "How can I help?",
+          });
+        })
+        .then(function () {
+          return botui.action.button({
+            action: [
+              {
+                text: "What are your opening hours?",
+                value: "hours",
+              },
+              {
+                text: "What do you do?",
+                value: "do",
+              },
+            ],
+          });
+        })
+        .then(function (res) {
+          var message;
+
+          if (res.value === "hours") {
+            message = "That’s a good one! This is a website, it’s always open.";
+          } else if (res.value === "do") {
+            message =
+              "I’m a product-focused Scrum master<br><br>I also have a keen interest in chatbots and web analytics";
+          }
+
+          return botui.message.add({
+            type: "html",
+            delay: 1000,
+            loading: true,
+            content: message,
+          });
+        })
+        .then(function (index) {
+          return botui.action.button({
+            action: [
+              {
+                text: "Cool!",
+                value: "cool",
+              },
+            ],
+          });
+        })
+        .then(function (index) {
+          return botui.message.add({
+            delay: 1000,
+            loading: true,
+            content: "I know! Thanks.",
+          });
+        });
+    </script>
+  </body>
+</html>

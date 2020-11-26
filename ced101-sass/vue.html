@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/botui@0.3.9/build/botui.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/botui/0.3.9/botui-theme-default.css"
+    />
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/botui/0.3.9/botui.min.js"></script>
+  </head>
+  <body>
+    <div id="app-5">
+      <p>{{ message }}</p>
+      <button v-on:click="reverseMessage">Reverse Message</button>
+      <span v-bind:title="message">
+        Hover your mouse over me for a few seconds to see my dynamically bound
+        title!
+      </span>
+    </div>
+    <div class="botui-app-container" id="botui-app">
+      <bot-ui></bot-ui>
+    </div>
+    <script>
+      var botui = new BotUI("botui-app"); // id of container
+
+      botui.message
+        .bot({
+          // show first message
+          delay: 200,
+          content: "hello",
+        })
+        .then(() => {
+          return botui.message.bot({
+            // second one
+            delay: 1000, // wait 1 sec.
+            content: "how are you?",
+          });
+        })
+        .then(() => {
+          return botui.action.button({
+            // let the user perform an action
+            delay: 1000,
+            action: [
+              {
+                text: "Good",
+                value: "good",
+              },
+              {
+                text: "Really Good",
+                value: "really_good",
+              },
+              {
+                text: "Good",
+                value: "good",
+              },
+              {
+                text: "Good",
+                value: "good",
+              },
+              {
+                text: "Good",
+                value: "good",
+              },
+            ],
+          });
+        })
+        .then((res) => {
+          return botui.message.bot({
+            delay: 1000,
+            content: `You are feeling ${res.value}!`,
+          });
+        });
+      var app5 = new Vue({
+        el: "#app-5",
+        data: {
+          message: "You loaded this page on " + new Date(),
+        },
+        methods: {
+          reverseMessage: function () {
+            this.message = this.message.split("").reverse().join("");
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
